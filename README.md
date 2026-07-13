@@ -1,3 +1,9 @@
+# PyHSS hacks for EMF 2026
+
+This branch contains all the extra commits on top of PyHSS base that we're using for EMF GSM 2026.
+
+---
+
 # PyHSS
 
 Python Home Subscriber Server implementing Diameter / 3GPP Interfaces.
