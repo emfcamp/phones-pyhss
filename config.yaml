@@ -192,7 +192,7 @@ redis:
   # sentinel - Connect to one or more redis sentinel hosts.
   connectionType: "tcp"
   unixSocketPath: '/var/run/redis/redis-server.sock'
-  host: localhost
+  host: redis
   port: 6379
 
 influxdb:
