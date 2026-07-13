@@ -16,10 +16,10 @@ echo "Template file: $TEMPLATE_FILE"
 echo "Config file: $PYHSS_CONFIG"
 
 # Generate configuration file from template
-if ! envsubst < "$TEMPLATE_FILE" > "$PYHSS_CONFIG"; then
-    echo "ERROR: Failed to generate configuration file"
-    exit 1
-fi
+#if ! envsubst < "$TEMPLATE_FILE" > "$PYHSS_CONFIG"; then
+#    echo "ERROR: Failed to generate configuration file"
+#    exit 1
+#fi
 
 echo "Configuration file generated successfully: $PYHSS_CONFIG"
 
