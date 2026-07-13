@@ -13,18 +13,18 @@ hss:
   OriginHost: "hss01"
 
   #Value to populate as the OriginRealm in Diameter responses
-  OriginRealm: "epc.mnc001.mcc001.3gppnetwork.org"
+  OriginRealm: "epc.mnc901.mcc070.3gppnetwork.org"
 
   #Value to populate as the Product name in Diameter responses
   ProductName: "pyHSS"
 
   #Name of the Site, shown in API
-  site_name: "Sydney"
+  site_name: "ETplc"
 
   #Your Home Mobile Country Code (Used for PLMN calcluation)
-  MCC: "001"
+  MCC: "901"
   #Your Home Mobile Network Code (Used for PLMN calcluation)
-  MNC: "01"
+  MNC: "70"
 
   #The maximum time to wait, in seconds, before disconnecting a client when no data is received.
   client_socket_timeout: 300
@@ -76,7 +76,7 @@ hss:
 
   #S-CSCF Pool
   scscf_pool:
-    - 'scscf.ims.mnc001.mcc001.3gppnetwork.org'
+    - 'scscf.ims.mnc901.mcc070.3gppnetwork.org'
 
   roaming:
     inbound:
@@ -107,7 +107,7 @@ hss:
       unknown_code_msg: "The USSD code you have entered is not recognized."
       codes:
         - code: "*#100#"
-          msg: "Your MSISDN is %msisdn%"
+          msg: "Your Number is %msisdn%"
         - code: "*#101#"
           msg: "Your IMSI is %imsi%"
 
@@ -181,8 +181,8 @@ geored:
   enabled: False
   sync_actions: ['HSS', 'IMS', 'PCRF', 'EIR']    #What event actions should be synced
   endpoints:                         #List of PyHSS API Endpoints to update
-    - 'http://hss01.mnc001.mcc001.3gppnetwork.org:8080'
-    - 'http://hss02.mnc001.mcc001.3gppnetwork.org:8080'
+    - 'http://hss01.mnc901.mcc070.3gppnetwork.org:8080'
+    - 'http://hss02.mnc901.mcc070.3gppnetwork.org:8080'
 
 #Redis is required to run PyHSS. An instance running on a local network is recommended for production.
 redis:

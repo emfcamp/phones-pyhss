@@ -13,18 +13,18 @@ hss:
   OriginHost: "${HSS_ORIGIN_HOST:-hss01}"
 
   #Value to populate as the OriginRealm in Diameter responses
-  OriginRealm: "${HSS_ORIGIN_REALM:-epc.mnc001.mcc001.3gppnetwork.org}"
+  OriginRealm: "${HSS_ORIGIN_REALM:-epc.mnc901.mcc070.3gppnetwork.org}"
 
   #Value to populate as the Product name in Diameter responses
   ProductName: "${HSS_PRODUCT_NAME:-pyHSS}"
 
   #Name of the Site, shown in API
-  site_name: "${HSS_SITE_NAME:-Sydney}"
+  site_name: "${HSS_SITE_NAME:-ETplc}"
 
   #Your Home Mobile Country Code (Used for PLMN calcluation)
-  MCC: "${HSS_MCC:-001}"
+  MCC: "${HSS_MCC:-901}"
   #Your Home Mobile Network Code (Used for PLMN calcluation)
-  MNC: "${HSS_MNC:-01}"
+  MNC: "${HSS_MNC:-70}"
 
   #The maximum time to wait, in seconds, before disconnecting a client when no data is received.
   client_socket_timeout: ${HSS_CLIENT_SOCKET_TIMEOUT:-300}
@@ -76,7 +76,7 @@ hss:
 
   #S-CSCF Pool
   scscf_pool:
-    - "${HSS_SCSCF_POOL:-scscf.ims.mnc001.mcc001.3gppnetwork.org}"
+    - "${HSS_SCSCF_POOL:-scscf.ims.mnc901.mcc070.3gppnetwork.org}"
 
   roaming:
     inbound:
@@ -107,7 +107,7 @@ hss:
       unknown_code_msg: "The USSD code you have entered is not recognized."
       codes:
         - code: "*#100#"
-          msg: "Your MSISDN is: %msisdn%"
+          msg: "Your number is: %msisdn%"
         - code: "*#101#"
           msg: "Your IMSI is: %imsi%"
 
@@ -170,8 +170,8 @@ geored:
   enabled: ${GEORED_ENABLED:-False}
   sync_actions: ["${GEORED_SYNC_ACTIONS:-HSS,IMS,PCRF,EIR}"]    #What event actions should be synced
   endpoints:                         #List of PyHSS API Endpoints to update
-    - "${GEORED_ENDPOINT_1:-http://hss01.mnc001.mcc001.3gppnetwork.org:8080}"
-    - "${GEORED_ENDPOINT_2:-http://hss02.mnc001.mcc001.3gppnetwork.org:8080}"
+    - "${GEORED_ENDPOINT_1:-http://hss01.mnc901.mcc070.3gppnetwork.org:8080}"
+    - "${GEORED_ENDPOINT_2:-http://hss02.mnc901.mcc070.3gppnetwork.org:8080}"
 
 #Redis is required to run PyHSS. An instance running on a local network is recommended for production.
 redis:
