@@ -45,7 +45,7 @@ class DiameterService:
         self.enableOutboundDwr = config.get('hss', {}).get('send_dwr', False)
         self.outboundDwrInterval = int(config.get('hss', {}).get('send_dwr_interval', 5))
         self.originHost = config.get('hss', {}).get('OriginHost', 'hss01')
-        self.originRealm = config.get('hss', {}).get('OriginRealm', "epc.mnc001.mcc001.3gppnetwork.org")
+        self.originRealm = config.get('hss', {}).get('OriginRealm', "epc.mnc901.mcc070.3gppnetwork.org")
         self.diameterRequestTimeout = int(config.get('hss', {}).get('diameter_request_timeout', 10))
         self.benchmarking = config.get('benchmarking', {}).get('enabled', False)
         self.benchmarkingInterval = config.get('benchmarking', {}).get('reporting_interval', 3600)
