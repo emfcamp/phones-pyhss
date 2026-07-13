@@ -47,5 +47,5 @@ jobs:
           cache-to: type=gha,mode=max
           file: docker/Dockerfile
           push: true
-          tags: ghcr.io/emfcamp/phones-pyhss:latest
+          tags: ghcr.io/emfcamp/pyhss:latest
 
