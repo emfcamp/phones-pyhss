@@ -19,7 +19,7 @@ hss:
   ProductName: "pyHSS"
 
   #Name of the Site, shown in API
-  site_name: "ETplc"
+  site_name: "ET plc"
 
   #Your Home Mobile Country Code (Used for PLMN calcluation)
   MCC: "901"
@@ -148,7 +148,7 @@ logging:
 # using MySQL or PostgreSQL instead (see below).
 database:
   db_type: sqlite
-  database: hss.db
+  database: /var/lib/pyhss/hss.db
 
 # database:
 #   db_type: mysql
