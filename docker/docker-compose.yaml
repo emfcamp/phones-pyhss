@@ -1,7 +1,7 @@
 services:
 
   pyhss_api:
-    image: ghcr.io/nickvsnetworking/pyhss/pyhss:development
+    image: ghcr.io/emfcamp/phones-pyhss:latest
     build:
       context: ../
       dockerfile: docker/Dockerfile
@@ -27,7 +27,7 @@ services:
         condition: service_healthy
 
   pyhss_diameter:
-    image: ghcr.io/nickvsnetworking/pyhss/pyhss:development
+    image: ghcr.io/emfcamp/phones-pyhss:latest
     env_file:
         - ../docker/.env
     environment:
@@ -50,7 +50,7 @@ services:
         condition: service_healthy
 
   pyhss_hss:
-    image: ghcr.io/nickvsnetworking/pyhss/pyhss:development
+    image: ghcr.io/emfcamp/phones-pyhss:latest
     env_file:
         - ../docker/.env
     environment:
@@ -64,7 +64,7 @@ services:
         condition: service_healthy
 
   pyhss_gsup:
-    image: ghcr.io/nickvsnetworking/pyhss/pyhss:development
+    image: ghcr.io/emfcamp/phones-pyhss:latest
     env_file:
         - ../docker/.env
     container_name: "pyhss_gsup"
@@ -77,7 +77,7 @@ services:
       - pyhss_sqlite:/var/lib/pyhss
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "4222"]
-      interval: 10s
+      interval: 30s
       timeout: 5s
       retries: 5
       start_period: 3s
@@ -87,7 +87,7 @@ services:
         condition: service_healthy
 
   redis:
-    image: "redis:7.0-alpine"
+    image: "redis:7.2-alpine"
     container_name: "redis"
     ports:
       - "127.0.0.1:6379:6379"
