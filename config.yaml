@@ -10,10 +10,10 @@ hss:
   bind_port: 3868
 
   #Value to populate as the OriginHost in Diameter responses
-  OriginHost: "hss01"
+  OriginHost: "hss.localdomain"
 
   #Value to populate as the OriginRealm in Diameter responses
-  OriginRealm: "epc.mnc901.mcc070.3gppnetwork.org"
+  OriginRealm: "localdomain"
 
   #Value to populate as the Product name in Diameter responses
   ProductName: "pyHSS"
