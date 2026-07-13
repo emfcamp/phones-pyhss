@@ -67,7 +67,7 @@ class RedisMessaging:
             return f'Succesfully stored metric called: {metricName}, with value of: {metricType}'
         except Exception as e:
             return ''
-    
+
     def sendLogMessage(self, serviceName: str, logLevel: str, logTimestamp: int, message: str, logExpiry: int=None, usePrefix: bool=False, prefixHostname: str='unknown', prefixServiceName: str='common') -> str:
         """
         Stores a message in a given Queue (Key).
@@ -125,13 +125,27 @@ class RedisMessaging:
     def awaitMessage(self, key: str, usePrefix: bool=False, prefixHostname: str='unknown', prefixServiceName: str='common'):
         """
         Blocks until a message is received at the given key, then returns the message.
+
+        PATCHED (phones-ansible, 2026-07-08): the original implementation
+        swallowed any exception from blpop() and returned '' (an empty
+        string). Callers index the result positionally (e.g. `[1]`), so a
+        bare '' sentinel causes an IndexError in the caller, and since the
+        caller's own except-block can reference a not-yet-assigned local
+        variable, that IndexError cascades into an UnboundLocalError which
+        is unhandled and kills the calling thread permanently. Fix: retry
+        internally with a short backoff and log the failure instead of
+        returning a broken sentinel value.
         """
-        try:
-            key = self.handlePrefix(key=key, usePrefix=usePrefix, prefixHostname=prefixHostname, prefixServiceName=prefixServiceName)
-            message =  self.redisClient.blpop(key)
-            return tuple(data.decode() for data in message)
-        except Exception as e:
-            return ''
+        prefixedKey = self.handlePrefix(key=key, usePrefix=usePrefix, prefixHostname=prefixHostname, prefixServiceName=prefixServiceName)
+        while True:
+            try:
+                message = self.redisClient.blpop(prefixedKey, timeout=5)
+                if message is None:
+                    continue
+                return tuple(data.decode() if isinstance(data, (bytes, bytearray)) else data for data in message)
+            except Exception as e:
+                print(f"[messaging] awaitMessage error on key '{prefixedKey}': {e}. Retrying in 1s.", flush=True)
+                time.sleep(1)
 
     def awaitBulkMessage(self, key: str, count: int=100, usePrefix: bool=False, prefixHostname: str='unknown', prefixServiceName: str='common'):
         """
@@ -208,7 +222,7 @@ class RedisMessaging:
             return data
         except Exception as e:
             return ''
-        
+
     def getAllHashData(self, name: str, usePrefix: bool=False, prefixHostname: str='unknown', prefixServiceName: str='common') -> str:
         """
         Gets all keys and values stored under a given hash.
