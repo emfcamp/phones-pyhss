@@ -7,21 +7,11 @@ set -e
 # This script processes the configuration template and starts the specified service
 
 # Default values
-TEMPLATE_FILE="${CONFIG_TEMPLATE:-/opt/pyhss/config.yaml.template}"
 PYHSS_CONFIG="${PYHSS_CONFIG:-/opt/pyhss/config.yaml}"
 CONTAINER_ROLE="${CONTAINER_ROLE:-undefined}"
 
 echo "=== PyHSS Container Startup ==="
-echo "Template file: $TEMPLATE_FILE"
 echo "Config file: $PYHSS_CONFIG"
-
-# Generate configuration file from template
-if ! envsubst < "$TEMPLATE_FILE" > "$PYHSS_CONFIG"; then
-    echo "ERROR: Failed to generate configuration file"
-    exit 1
-fi
-
-echo "Configuration file generated successfully: $PYHSS_CONFIG"
 
 # Print some environment info for debugging
 echo ""

@@ -1,18 +1,3 @@
-FROM python:3.12-slim-trixie AS envsubst
-
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Install go envsubst - needed for config processing
-# It is mightier than the default envsubst from gettext
-COPY docker/install-go-envsubst.sh /install-go-envsubst.sh
-RUN chmod +x /install-go-envsubst.sh && \
-    /install-go-envsubst.sh && \
-    rm /install-go-envsubst.sh
-
 FROM python:3.12-slim-trixie AS python-venv
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -57,9 +42,6 @@ RUN apt-get update && \
         netcat-traditional && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-
-# Copy envsubst from the previous stage
-COPY --from=envsubst /usr/local/bin/envsubst /usr/local/bin/envsubst
 
 # Create application user and group
 RUN useradd -d /opt/pyhss -r -m pyhss
