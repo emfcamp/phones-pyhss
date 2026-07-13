@@ -26,11 +26,21 @@ services:
       redis:
         condition: service_healthy
 
-  pyhss_diameter:
+  pyhss_metrics:
     image: ghcr.io/emfcamp/phones-pyhss:latest
     env_file:
         - ../docker/.env
     environment:
+      CONTAINER_ROLE: "metrics"
+    container_name: "pyhss_metrics"
+    ports:
+      - "127.0.0.1:9191:9191"
+    volumes:
+      - pyhss_logs:/opt/pyhss/logs
+      - pyhss_sqlite:/var/lib/pyhss
+    depends_on:
+      redis:
+        condition: service_healthy
       CONTAINER_ROLE: "diameter"
     container_name: "pyhss_diameter"
     ports:
