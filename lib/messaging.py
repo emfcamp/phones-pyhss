@@ -14,6 +14,8 @@ class RedisMessaging:
             self.redisClient = Redis(unix_socket_path=unixSocketPath)
         else:
             self.redisClient = Redis(host=host, port=port)
+        if redis.ping() is not True:
+            raise AssertionError("redis not connected")
 
     def handlePrefix(self, key: str, usePrefix: bool=False, prefixHostname: str='unknown', prefixServiceName: str='common'):
         """
