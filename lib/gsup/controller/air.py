@@ -20,8 +20,8 @@ class AIRController(GsupController):
         super().__init__(logger, database)
 
         reject_cause = self._get_unknown_subscriber_reject_cause().value
-        await self._logger.logAsync(service='GSUP', level='INFO',
-                                    message=f"Unknown subscribers will be rejected with cause {reject_cause}")
+        self._logger.log(service='GSUP', level='INFO',
+                         message=f"Unknown subscribers will be rejected with cause {reject_cause}")
 
     def get_num_vectors_req(self, message: dict):
         # OSMO_GSUP_MAX_NUM_AUTH_INFO
