@@ -15,11 +15,17 @@ from utils import validate_imsi, InvalidIMSI
 
 from pyhss_config import config
 
+def get_unknown_subscriber_reject_cause() -> GMMCause:
+    if config['hss']['roaming']['inbound']['reject_unknown_imsis_with'] == 'ROAMING_NOT_ALLOWED':
+        return GMMCause.ROAMING_NOTALLOWED
+    else:
+        return GMMCause.IMSI_UNKNOWN
+
 class AIRController(GsupController):
     def __init__(self, logger: LogTool, database: Database):
         super().__init__(logger, database)
 
-        reject_cause = self._get_unknown_subscriber_reject_cause().value
+        reject_cause = get_unknown_subscriber_reject_cause().value
         self._logger.log(service='GSUP', level='INFO',
                          message=f"Unknown subscribers will be rejected with cause {reject_cause}")
 
@@ -31,13 +37,6 @@ class AIRController(GsupController):
         if not ret or ret > max_num:
             return max_num
         return ret
-
-    @staticmethod
-    def _get_unknown_subscriber_reject_cause() -> GMMCause:
-        if config['hss']['roaming']['inbound']['reject_unknown_imsis_with'] == 'ROAMING_NOT_ALLOWED':
-            return GMMCause.ROAMING_NOTALLOWED
-        else:
-            return GMMCause.IMSI_UNKNOWN
 
     async def handle_message(self, peer: IPAPeer, message: GsupMessage):
         request_dict = message.to_dict()
@@ -86,12 +85,13 @@ class AIRController(GsupController):
                 .build(),
             )
         except ValueError as e:
-            await self._logger.logAsync(service='GSUP', level='WARN', message=f"No auth data for subscriber {imsi}")
+            reject_cause = get_unknown_subscriber_reject_cause().value
+            await self._logger.logAsync(service='GSUP', level='WARN', message=f"No auth data for subscriber {imsi}; rejecting with cause {reject_cause}")
             await self._send_gsup_response(
                 peer,
                 GsupMessageBuilder().with_msg_type(MsgType.SEND_AUTH_INFO_ERROR)
                 .with_ie('imsi', imsi)
-                .with_ie('cause', self._get_unknown_subscriber_reject_cause().value)
+                .with_ie('cause', reject_cause)
                 .build(),
             )
         except Exception as e:

@@ -12,6 +12,7 @@ from baseModels import SubscriberInfo
 from database import Database
 from gsup.controller.abstract_controller import GsupController
 from gsup.controller.abstract_transaction import AbstractTransaction
+from gsup.controller.air import get_unknown_subscriber_reject_cause
 from gsup.protocol.gsup_msg import GsupMessageBuilder, GsupMessageUtil, GMMCause
 from gsup.protocol.ipa_peer import IPAPeer
 from logtool import LogTool
@@ -152,7 +153,9 @@ class ULRController(GsupController):
                 subscriber_info = self._database.Get_Gsup_SubscriberInfo(imsi)
                 subscriber = self._database.Get_Subscriber(imsi=imsi, get_attributes=True)
             except ValueError as e:
-                raise ULRError(f"Received ULR for unknown subscriber {imsi}", GMMCause.IMSI_UNKNOWN) from e
+                cause = get_unknown_subscriber_reject_cause()
+                v = cause.value
+                raise ULRError(f"Received ULR for unknown subscriber {imsi}; rejecting with cause {v}", cause) from e
 
             for rat_type_to_check in rat_types_to_check:
                 if not self.__rat_restriction_checker.is_rat_allowed(subscriber['attributes'], rat_type_to_check):
