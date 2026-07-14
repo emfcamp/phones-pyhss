@@ -19,6 +19,10 @@ class AIRController(GsupController):
     def __init__(self, logger: LogTool, database: Database):
         super().__init__(logger, database)
 
+        reject_cause = self._get_unknown_subscriber_reject_cause().value
+        await self._logger.logAsync(service='GSUP', level='INFO',
+                                    message=f"Unknown subscribers will be rejected with cause {reject_cause}")
+
     def get_num_vectors_req(self, message: dict):
         # OSMO_GSUP_MAX_NUM_AUTH_INFO
         max_num = 5
@@ -82,7 +86,7 @@ class AIRController(GsupController):
                 .build(),
             )
         except ValueError as e:
-            await self._logger.logAsync(service='GSUP', level='WARN', message=f"Subscriber not found: {imsi}")
+            await self._logger.logAsync(service='GSUP', level='WARN', message=f"No auth data for subscriber {imsi}")
             await self._send_gsup_response(
                 peer,
                 GsupMessageBuilder().with_msg_type(MsgType.SEND_AUTH_INFO_ERROR)

@@ -152,7 +152,7 @@ class ULRController(GsupController):
                 subscriber_info = self._database.Get_Gsup_SubscriberInfo(imsi)
                 subscriber = self._database.Get_Subscriber(imsi=imsi, get_attributes=True)
             except ValueError as e:
-                raise ULRError(f"Subscriber not found: {imsi}", GMMCause.IMSI_UNKNOWN) from e
+                raise ULRError(f"Received ULR for unknown subscriber {imsi}", GMMCause.IMSI_UNKNOWN) from e
 
             for rat_type_to_check in rat_types_to_check:
                 if not self.__rat_restriction_checker.is_rat_allowed(subscriber['attributes'], rat_type_to_check):
