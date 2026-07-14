@@ -49,6 +49,7 @@ class GsupServer:
         Handle incoming connection
         """
         peer_info = writer.get_extra_info('peername')
+        any_bytes_received = False
         if peer_info is None:
             await self.logger.logAsync(service='GSUP', level='ERROR', message="Peer information not available")
             writer.close()
@@ -72,6 +73,7 @@ class GsupServer:
                     await writer.drain()
 
                 data = await asyncio.wait_for(reader.readexactly(3), timeout=self.socket_timeout)
+                any_bytes_received = True
                 payload_length = int.from_bytes(data[0:2], 'big')
                 try:
                     protocol = self.ipa.proto(data[2])
@@ -109,7 +111,9 @@ class GsupServer:
 
 
             except (ConnectionResetError, asyncio.IncompleteReadError):
-                await self.logger.logAsync(service='GSUP', level='INFO',
+                # Allow doing healthchecks without spamming the log
+                log_level = 'WARN' if any_bytes_received else 'DEBUG'
+                await self.logger.logAsync(service='GSUP', level=log_level,
                                            message=f"GSUP Client disconnected: {peer_name}")
                 writer.close()
                 clear_connections = True
